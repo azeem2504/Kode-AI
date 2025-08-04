@@ -13,7 +13,7 @@ interface Props {
 }
 export const ProjectHeader = ({projectId}: Props) => {
     const trpc = useTRPC()
-    const router = useRouter()
+   
     const {data: project} = useSuspenseQuery(trpc.projects.getOne.queryOptions({
         id: projectId
     }))

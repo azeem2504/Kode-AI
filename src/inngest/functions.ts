@@ -192,12 +192,15 @@ export const codeAgentFunction = inngest.createFunction(
 
     const result = await network.run(event.data.value, { state })
 
+    
+
     const fragmentTitleGenerator = createAgent({
       name: "fragment-title-generator",
       description: "A fragment title generator.",
       system: FRAGMENT_TITLE_PROMPT,
       model: openai({
-        model: "deepseek/deepseek-chat-v3-0324:free",
+        // model: "deepseek/deepseek-chat-v3-0324:free",
+        model: "mistralai/mistral-7b-instruct:free",
         apiKey: process.env.OPENROUTER_API_KEY,
         baseUrl: "https://openrouter.ai/api/v1",
       })
@@ -207,22 +210,16 @@ export const codeAgentFunction = inngest.createFunction(
       description: "A response generator.",
       system: RESPONSE_PROMPT,
       model: openai({
-        model: "deepseek/deepseek-chat-v3-0324:free",
+        // model: "deepseek/deepseek-chat-v3-0324:free",
+        model: "mistralai/mistral-7b-instruct:free" ,
         apiKey: process.env.OPENROUTER_API_KEY,
         baseUrl: "https://openrouter.ai/api/v1",
       })
     })
 
-    const {output: fragmentTitleOutput} = await fragmentTitleGenerator.run(result.state.data.summary)
-    const {output: responseOutput} = await responseGenerator.run(result.state.data.summary)
+    const { output: fragmentTitleOutput } = await fragmentTitleGenerator.run(result.state.data.summary)
+    const { output: responseOutput } = await responseGenerator.run(result.state.data.summary)
 
-    // const { output: fragmentTitleOutput } = await step.run("fragment-title-generator", async () => {
-    //   return await fragmentTitleGenerator.run(result.state.data.summary);
-    // });
-
-    // const { output: responseOutput } = await step.run("response-generator", async () => {
-    //   return await responseGenerator.run(result.state.data.summary);
-    // });
 
 
     const isError = !result.state.data.summary ||
@@ -271,3 +268,5 @@ export const codeAgentFunction = inngest.createFunction(
     }
   },
 );
+
+

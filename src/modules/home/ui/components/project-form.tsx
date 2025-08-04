@@ -60,7 +60,7 @@ export const ProjectForm = () => {
             value: values.value,
         })
     }
-    const onSelect = (value) => {
+    const onSelect = (value: string) => {
         form.setValue("value", value, {
             shouldValidate: true,
             shouldDirty: true,

@@ -2,16 +2,18 @@ import { Button } from "@/components/ui/button"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuPortal, DropdownMenuRadioGroup, DropdownMenuRadioItem, DropdownMenuSeparator, DropdownMenuSub, DropdownMenuSubContent, DropdownMenuSubTrigger, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 import { useTRPC } from "@/trpc/client"
 import { useSuspenseQuery } from "@tanstack/react-query"
-import { ChevronDownIcon, ChevronLeftIcon, SunMoonIcon } from "lucide-react"
+import { ChevronDownIcon, ChevronLeftIcon, ChevronRightIcon, CrownIcon, SunMoonIcon } from "lucide-react"
 import { useTheme } from "next-themes"
 import Image from "next/image"
 import Link from "next/link"
+import { useRouter } from "next/navigation"
 
 interface Props {
     projectId: string
 }
 export const ProjectHeader = ({projectId}: Props) => {
     const trpc = useTRPC()
+    const router = useRouter()
     const {data: project} = useSuspenseQuery(trpc.projects.getOne.queryOptions({
         id: projectId
     }))
@@ -21,7 +23,7 @@ export const ProjectHeader = ({projectId}: Props) => {
             <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                     <Button variant="ghost" size="sm" className="focus-visible:ring-0 hover:bg-transparent hover:opacity-75 transition-opacity pl-2!">
-                        <Image src="/logo.svg" alt="Vibe" width={18} height={18} />
+                        <Image src="/logo.svg" alt="Vibe" width={28} height={28} />
                         <span className="text-sm font-medium">{project.name}</span>
                         <ChevronDownIcon/>
                     </Button>
@@ -34,6 +36,14 @@ export const ProjectHeader = ({projectId}: Props) => {
                         </Link>
                     </DropdownMenuItem>
                     <DropdownMenuSeparator/>
+                    <DropdownMenuItem asChild>
+                        <Link href="/pricing">
+                            <CrownIcon/>
+                            <span className="mr-7">Upgrade</span>
+                            <ChevronRightIcon/>
+                        </Link>
+                    </DropdownMenuItem>
+                    <DropdownMenuSeparator/>
                     <DropdownMenuSub>
                         <DropdownMenuSubTrigger className="gap-2">
                             <SunMoonIcon className="size-4 text-muted-foreground" />
@@ -41,6 +51,7 @@ export const ProjectHeader = ({projectId}: Props) => {
                         </DropdownMenuSubTrigger>
                         <DropdownMenuPortal>
                             <DropdownMenuSubContent>
+                                
                                 <DropdownMenuRadioGroup value={theme} onValueChange={setTheme}>
                                     <DropdownMenuRadioItem value="light">
                                         <span>Light</span>

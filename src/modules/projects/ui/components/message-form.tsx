@@ -2,7 +2,7 @@ import { Button } from "@/components/ui/button"
 import { Form, FormField } from "@/components/ui/form"
 import { cn } from "@/lib/utils"
 import { useTRPC } from "@/trpc/client"
-import { useMutation, useQueryClient } from "@tanstack/react-query"
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 
 import { ArrowUpIcon, Loader2Icon } from "lucide-react"
 import { useState } from "react"
@@ -12,6 +12,8 @@ import { zodResolver } from "@hookform/resolvers/zod"
 
 import { toast } from "sonner"
 import z from "zod"
+import { Usage } from "./usage"
+import { useRouter } from "next/navigation"
 
 interface Props {
     projectId: string,
@@ -24,9 +26,11 @@ const formSchema = z.object({
 })
 export const MessageForm = ({projectId}: Props) => {
     const [isFocused, setIsFocused] = useState(false)
-    const showUsage = false
     const trpc = useTRPC()
+    const router = useRouter()
+    const {data: usage} = useQuery(trpc.usage.status.queryOptions())
     const queryClient = useQueryClient()
+    const showUsage = !!usage
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {
@@ -39,11 +43,17 @@ export const MessageForm = ({projectId}: Props) => {
             queryClient.invalidateQueries(
                 trpc.messages.getMany.queryOptions({projectId})
             )
-            // TODO: invalidate usage status/
+            queryClient.invalidateQueries(
+                trpc.usage.status.queryOptions()
+            )
         },
         onError: (error) => {
-            //TODO: Redirect to pricing page if error
+            
             toast.error(error.message)
+
+            if(error.data?.code === "TOO_MANY_REQUESTS") {
+                router.push("/pricing")
+            }
         }
 }));
     const onSubmit = async (values: z.infer<typeof formSchema>) => {
@@ -56,6 +66,12 @@ export const MessageForm = ({projectId}: Props) => {
     const isButtonDisabled = isPending || !form.formState.isValid
     return (
         <Form {...form}>
+            {showUsage && (
+                <Usage
+                    points={usage.remainingPoints}
+                    msBeforeNext={usage.msBeforeNext}
+                />
+            )}
             <form 
                 onSubmit={form.handleSubmit(onSubmit)}
                 className={cn(
@@ -90,7 +106,7 @@ export const MessageForm = ({projectId}: Props) => {
                 <div className="flex gap-x-2 items-end justify-between pt-2">
                     <div className="text-[10px] text-muted-foreground font-mono">
                         <kbd className="ml-auto pointer-events-none inline-flex h-5 select-none items-center gap-1 rounded border bg-muted px-1.5 font-mono text-[10px] font-medium text-muted-foreground">
-                            <span>&#8984</span>Enter
+                            <span>&#8984;</span>Enter
                         </kbd>
                         &nbsp;to submit
                     </div>

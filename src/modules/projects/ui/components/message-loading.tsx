@@ -39,11 +39,11 @@ export const MessageLoading = () => {
                 <Image
                     src="/logo.svg"
                     alt="Vibe"
-                    width={18}
-                    height={18}
+                    width={28}
+                    height={28}
                     className="shrink-0"
                 />
-                <span className="text-sm font-medium">Vibe</span>
+                <span className="text-sm font-medium">Kode</span>
             </div>
             <div className="pl-8.5 flex flex-col gap-y-4">
                 <ShimmerMessages/>

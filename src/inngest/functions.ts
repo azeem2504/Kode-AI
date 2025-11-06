@@ -66,8 +66,9 @@ export const codeAgentFunction = inngest.createFunction(
         //   defaultParameters: {
         //     temperature: 0.1,
         //   },
-        model: "deepseek/deepseek-chat-v3-0324:free",
+        // model: "deepseek/deepseek-chat-v3-0324:free",
         // model: "mistralai/mistral-7b-instruct:free",
+        model: "deepseek/deepseek-chat-v3.1:free",
         apiKey: process.env.OPENROUTER_API_KEY,
         baseUrl: "https://openrouter.ai/api/v1",
       }),
@@ -201,7 +202,8 @@ export const codeAgentFunction = inngest.createFunction(
       system: FRAGMENT_TITLE_PROMPT,
       model: openai({
         // model: "deepseek/deepseek-chat-v3-0324:free",
-        model: "mistralai/mistral-7b-instruct:free",
+        // model: "mistralai/mistral-7b-instruct:free",
+        model: "deepseek/deepseek-chat-v3.1:free",
         apiKey: process.env.OPENROUTER_API_KEY,
         baseUrl: "https://openrouter.ai/api/v1",
       })
@@ -212,8 +214,9 @@ export const codeAgentFunction = inngest.createFunction(
       system: RESPONSE_PROMPT,
       model: openai({
         // model: "deepseek/deepseek-chat-v3-0324:free",
-        model: "qwen/qwen-2.5-coder-32b-instruct:free",
+        // model: "qwen/qwen-2.5-coder-32b-instruct:free",
         // model: "mistralai/mistral-7b-instruct:free" ,
+        model: "deepseek/deepseek-chat-v3.1:free",
         apiKey: process.env.OPENROUTER_API_KEY,
         baseUrl: "https://openrouter.ai/api/v1",
       })

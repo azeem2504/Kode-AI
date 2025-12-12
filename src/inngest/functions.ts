@@ -1,5 +1,5 @@
-// import { openai, createAgent, createTool, createNetwork, type Tool, type Message, createState } from "@inngest/agent-kit";
-import { gemini, createAgent, createTool, createNetwork, type Tool, type Message, createState } from "@inngest/agent-kit";
+import { openai, createAgent, createTool, createNetwork, type Tool, type Message, createState } from "@inngest/agent-kit";
+// import { gemini, createAgent, createTool, createNetwork, type Tool, type Message, createState } from "@inngest/agent-kit";
 import { inngest } from "./client";
 import { Sandbox } from "@e2b/code-interpreter"
 import { getSandbox, lastAssistantTextMessageContent } from "./utils";
@@ -61,15 +61,15 @@ export const codeAgentFunction = inngest.createFunction(
       name: "code-agent",
       description: "An expert coding agent.",
       system: PROMPT,
-      model: gemini({ 
-        model: "gemini-2.0-flash",
-        apiKey: process.env.GEMINI_API_KEY,
-      }),
-      // model: openai({
-      //   model: "deepseek/deepseek-chat-v3.1:free",
-      //   apiKey: process.env.OPENROUTER_API_KEY,
-      //   baseUrl: "https://openrouter.ai/api/v1",
+      // model: gemini({ 
+      //   model: "gemini-2.0-flash",
+      //   apiKey: process.env.GEMINI_API_KEY,
       // }),
+      model: openai({
+        model: "mistralai/mistral-7b-instruct:free",
+        apiKey: process.env.OPENROUTER_API_KEY,
+        baseUrl: "https://openrouter.ai/api/v1",
+      }),
       tools: [
         createTool({
           name: "terminal",
@@ -198,34 +198,34 @@ export const codeAgentFunction = inngest.createFunction(
       name: "fragment-title-generator",
       description: "A fragment title generator.",
       system: FRAGMENT_TITLE_PROMPT,
-      model: gemini({ 
-        model: "gemini-2.0-flash",
-        apiKey: process.env.GEMINI_API_KEY,
-      }),
-      // model: openai({
-      //   // model: "deepseek/deepseek-chat-v3-0324:free",
-      //   // model: "mistralai/mistral-7b-instruct:free",
-      //   model: "deepseek/deepseek-chat-v3.1:free",
-      //   apiKey: process.env.OPENROUTER_API_KEY,
-      //   baseUrl: "https://openrouter.ai/api/v1",
-      // })
+      // model: gemini({ 
+      //   model: "gemini-2.0-flash",
+      //   apiKey: process.env.GEMINI_API_KEY,
+      // }),
+      model: openai({
+        // model: "deepseek/deepseek-chat-v3-0324:free",
+        model: "mistralai/mistral-7b-instruct:free",
+        // model: "deepseek/deepseek-chat-v3.1:free",
+        apiKey: process.env.OPENROUTER_API_KEY,
+        baseUrl: "https://openrouter.ai/api/v1",
+      })
     })
     const responseGenerator = createAgent({
       name: "response-generator",
       description: "A response generator.",
       system: RESPONSE_PROMPT,
-      model: gemini({ 
-        model: "gemini-2.0-flash",
-        apiKey: process.env.GEMINI_API_KEY,
-      }),
-      // model: openai({
-      //   // model: "deepseek/deepseek-chat-v3-0324:free",
-      //   // model: "qwen/qwen-2.5-coder-32b-instruct:free",
-      //   // model: "mistralai/mistral-7b-instruct:free" ,
-      //   model: "deepseek/deepseek-chat-v3.1:free",
-      //   apiKey: process.env.OPENROUTER_API_KEY,
-      //   baseUrl: "https://openrouter.ai/api/v1",
-      // })
+      // model: gemini({ 
+      //   model: "gemini-2.0-flash",
+      //   apiKey: process.env.GEMINI_API_KEY,
+      // }),
+      model: openai({
+        // model: "deepseek/deepseek-chat-v3-0324:free",
+        // model: "qwen/qwen-2.5-coder-32b-instruct:free",
+        model: "mistralai/mistral-7b-instruct:free" ,
+        // model: "deepseek/deepseek-chat-v3.1:free",
+        apiKey: process.env.OPENROUTER_API_KEY,
+        baseUrl: "https://openrouter.ai/api/v1",
+      })
     })
 
     const { output: fragmentTitleOutput } = await fragmentTitleGenerator.run(result.state.data.summary)
